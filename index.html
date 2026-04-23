@@ -1,0 +1,83 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+  <main style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:3rem auto">
+    <h1>Random Person</h1>
+    <div id="record" style="padding:1rem;border:1px solid #ddd;border-radius:6px;background:#f9f9f9">
+      <!-- record appears here -->
+    </div>
+    <div style="margin-top:1rem">
+      <button id="newBtn">Get random record</button>
+      <button id="copyBtn">Copy JSON</button>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const records = [
+        { name: 'Alice', age: 25, gender: 'female' },
+        { name: 'Bob', age: 30, gender: 'male' },
+        { name: 'Charlie', age: 22, gender: 'male' },
+        { name: 'Diana', age: 28, gender: 'female' },
+        { name: 'Eve', age: 35, gender: 'female' },
+        { name: 'Frank', age: 40, gender: 'male' }
+      ];
+      function randomRecord(){
+        return records[Math.floor(Math.random()*records.length)];
+      }
+      function render(r){
+        const c = document.getElementById('record');
+        c.textContent = '';
+        const pre = document.createElement('pre');
+        pre.style.margin = 0;
+        pre.textContent = JSON.stringify(r, null, 2);
+        c.appendChild(pre);
+      }
+      document.addEventListener('DOMContentLoaded', function(){
+        const btn = document.getElementById('newBtn');
+        const copy = document.getElementById('copyBtn');
+        function show(){ render(randomRecord()); }
+        btn.addEventListener('click', show);
+        copy.addEventListener('click', function(){
+          const text = document.getElementById('record').innerText;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(()=>{ alert('Copied'); }, ()=>{ alert('Copy failed'); });
+          } else {
+            // fallback for older browsers
+            const ta = document.createElement('textarea');
+            ta.value = text; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); alert('Copied'); } catch(e){ alert('Copy failed'); }
+            ta.remove();
+          }
+        });
+        show();
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
